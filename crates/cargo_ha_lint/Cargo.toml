@@ -1,0 +1,11 @@
+[package]
+name = "cargo-ha-lint"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "cargo-ha-lint"
+path = "src/main.rs"
+
+[dependencies]
+ha_lint_core = { path = "../ha_lint_core" }
