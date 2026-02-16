@@ -101,17 +101,6 @@ unsafe {
 
 
 ---
-
-## Why this works as a template
-- Clear **rule metadata up top**
-- Explicit **rationale** (auditors love this)
-- Concrete **detection criteria**
-- Strong **examples**
-- Traceability sections separated cleanly
-- Deviation policy spelled out (MISRA-aligned)
-- Implementation notes guide *future you*
-
-
 }
 
 
@@ -123,23 +112,16 @@ This mapping reflects the class of failures that undocumented or
 misunderstood unsafe code can introduce.
 
 MISRA Applicability
-
 Rust (general): Applicable
-
 Safe Rust: Not applicable (rule concerns unsafe)
-
 MISRA Rust Category: Required
 
 This rule aligns with MISRA’s intent to:
-
 restrict unsafe constructs
-
 require explicit justification for deviations from safe subsets
-
 Safety-Critical Rust Guideline Mapping
 
 Area: Unsafety
-
 Guideline: Unsafe code must be minimal, isolated, and documented
 
 This rule directly enforces the documentation requirement.
@@ -156,33 +138,22 @@ The justification explicitly references the unsafe block
 The rationale is reviewable and auditable
 
 Suppression Requirements
-
 Any suppression must:
-
 reference HA-RUST-0001
-
 explain why local justification is not feasible
-
 identify where the safety argument is documented
 
 Silent suppression is not permitted.
 
 Implementation Notes
-
 Detection operates on the Rust HIR
-
 Comment association is heuristic but conservative
-
 False negatives are preferred over false positives
 
 Evidence Expectations
-
 To validate this rule:
-
 Positive test: undocumented unsafe block is flagged
-
 Negative test: documented unsafe block is accepted
-
 Edge case tests: nested unsafe blocks, macros, cfg-gated code
 
 Related Rules
