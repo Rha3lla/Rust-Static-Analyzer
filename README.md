@@ -105,3 +105,8 @@ The full list of planned and implemented static analysis rules is maintained
 separately.
 
 ➡️ **[View the Rule Catalog](docs/rule-catalog.md)**
+
+
+## Development
+
+See: **[Development Setup (Windows)](docs/development-setup.md)**
