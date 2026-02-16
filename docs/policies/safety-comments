@@ -1,182 +1,251 @@
-Comment association rules (spec v0.1)
+# Safety Comment Association Policy
 
-## Definitions
+This document defines how the Rust Static Analyzer associates
+**safety justification comments** with `unsafe` constructs.
 
-  Unsafe construct: unsafe { ... }, unsafe fn, unsafe impl, unsafe trait.
+This policy applies to all rules that require explicit documentation
+of unsafe behavior, including but not limited to:
+- HA-RUST-0001 — Unjustified `unsafe` block
+- HA-RUST-0003 — Missing `SAFETY:` comment in unsafe block
+- HA-RUST-0025 — Public unsafe API missing documentation
 
-  Safety justification: A comment containing the token SAFETY: (case-sensitive) with a non-empty explanation.
+The intent is to ensure **predictable, auditable, and enforceable**
+documentation of unsafe invariants in high-assurance Rust codebases.
 
-  Associated: The justification is “attached” to the unsafe construct per the rules below.
+---
 
-## Primary association (must satisfy one)
+## 1. Definitions
 
-A SAFETY: justification is considered associated if any of these are true:
+### Unsafe Construct
+Any of the following Rust constructs:
+- `unsafe { ... }`
+- `unsafe fn`
+- `unsafe impl`
+- `unsafe trait`
 
-  A) Immediately preceding comment block
-
-  The SAFETY: block is:
-
-    on the same line as the unsafe keyword, OR
-
-    in a contiguous comment block immediately above the unsafe construct
-
-“Contiguous comment block” means:
-
-  only whitespace and comments between the SAFETY: line and the unsafe construct
-
-  no blank line separating them (configurable; see below)
-
-  no attributes, cfg, or doc comments inserted between them unless explicitly allowed by rule C below
-
-  ## Example
-  // SAFETY: `ptr` is non-null and points to `len` valid elements.
-unsafe { core::ptr::copy_nonoverlapping(src, dst, len); }
+### Safety Justification
+A comment containing the **case-sensitive token**:
 
 
-## Example
+## SAFETY
+
+
+followed by a non-empty explanation of the safety invariants relied upon.
+
+### Associated
+A safety justification is considered *associated* with an unsafe construct
+if it satisfies the adjacency and content rules defined in this document.
+
+---
+
+## 2. Primary Association Rules
+
+A `SAFETY:` comment is associated with an unsafe construct if **any one**
+of the following conditions is met.
+
+### 2.1 Immediate Preceding Comment Block
+
+The `SAFETY:` comment appears in a contiguous comment block that:
+- directly precedes the unsafe construct
+- contains no intervening non-comment, non-attribute tokens
+- is separated only by whitespace
+
+No blank line is permitted between the comment block and the unsafe construct
+by default.
+
+#### Example (valid)
+
+```rust
 // SAFETY:
-// - `src` and `dst` are valid for `len` bytes
-// - they do not overlap
+// - `ptr` is non-null
+// - `ptr` points to `len` valid elements
 unsafe {
     core::ptr::copy_nonoverlapping(src, dst, len);
 }
 
 
-B) Same-line trailing comment
-## Example
-unsafe { *p = v; } // SAFETY: `p` is valid and properly aligned.
+## 2.2 Same-Line Trailing Comment
+
+The SAFETY: comment appears on the same line as the unsafe construct.
+
+unsafe { *ptr = value; } // SAFETY: `ptr` is valid and properly aligned
+
+This form is permitted but discouraged for complex invariants
 
 
-This is acceptable but discouraged for long invariants.
+## 2.3 Attribute Sandwich Association
 
-C) Attribute/doc-comment sandwich (allowed whitelist)
+Rust attributes frequently appear between comments and code.
+Association is permitted if:
 
-In Rust, it’s common to have #[cfg] or other attributes immediately above a block. 
-Permit association if the SAFETY: block is directly above the attributes, and the attributes are directly above the unsafe construct, with nothing else intervening.
+the SAFETY: comment immediately precedes a block of attributes
 
-Allowed “sandwich” interveners:
+the attributes immediately precede the unsafe construct
 
-#[cfg(...)], #[cfg_attr(...)]
+only whitelisted attributes appear between the comment and unsafe
 
-#[allow(...)] / #[deny(...)] (optionally)
+Whitelisted Attributes
 
-#[inline], #[cold], #[must_use], etc. (configurable list)
+By default, the following are allowed:
 
-## Example
-// SAFETY: This block is only compiled on target X where the MMIO address is valid.
+#[cfg(...)]
+
+#[cfg_attr(...)]
+
+#[allow(...)], #[deny(...)]
+
+#[inline], #[cold], #[must_use]
+
+The maximum number of attribute lines allowed is configurable
+(default: 8).
+
+Example (valid)
+// SAFETY: This block is only compiled when the MMIO region is valid.
 #[cfg(target_arch = "arm")]
 unsafe {
     mmio_write(REG, value);
 }
 
-Rule: allow at most N attribute lines between SAFETY and unsafe (default N=8).
 
+## Disallowed Associations
 
-Disallowed association (always fails)
-1) Non-comment tokens between SAFETY and unsafe
+A safety justification is not associated if any of the following occur:
 
-Any intervening code breaks association:
+3.1 Intervening Code
+
+Any non-comment, non-attribute token between the SAFETY: comment
+and the unsafe construct breaks association.
 // SAFETY: ...
 let x = 1;
 unsafe { ... } // ❌ not associated
 
 
-2) Different unsafe construct than intended
+## 3.2 Ambiguous Binding
 
-If there are multiple unsafe constructs and one SAFETY block appears above them, only the nearest following unsafe construct may claim it.
+A single SAFETY: comment may only bind to one unsafe construct.
 
-This avoids “one SAFETY comment covers everything” drift.
+If multiple unsafe constructs follow, the justification binds only to the
+nearest valid one.
 
-### Multi-unsafe and nested unsafe rules
-## Nearest-neighbor binding
+### 4. Nested Unsafe Constructs
+## 4.1 Default Behavior
 
-A SAFETY: block binds to the first unsafe construct that follows and satisfies the adjacency rules.
+Each unsafe construct requires its own safety justification.
 
-## Nested unsafe blocks
+Outer justifications do not implicitly cover nested unsafe blocks.
 
-Outer unsafe needs a SAFETY justification (for the outer block’s intent).
+This is the default behavior for:
 
-Inner unsafe blocks:
+  high_assurance
 
-  May omit SAFETY if they are trivial and entirely covered by the outer SAFETY, but only if configured.
-
-  Default behavior (high assurance): require SAFETY for each unsafe block unless an explicit “covered by outer” marker exists.
-
-## Recommended default:
-
-  high_assurance: require SAFETY per unsafe block
-
-  security: require per unsafe unless inner block is a direct call to a wrapper marked #[ha_safety_covered] (future)
-
-  misra_rust: require per unsafe block
+  misra_rust profiles
 
 
-## Required content quality checks 
+## 4.2 Optional Relaxation (Configurable)
 
-A SAFETY: comment is invalid if:
+Projects may optionally allow inner unsafe blocks to omit a justification
+if they are entirely covered by an outer documented invariant.
 
-  it is empty (“SAFETY:” with nothing else)
-
-  it is purely tautological (“SAFETY: this is safe”)
-
-  it only restates what the code does without invariants (“SAFETY: copy bytes”)
-
-Heuristic content checks (keeping them light at first):
-
-Must contain at least one of: because, guarantee, invariant, caller, ensures, valid, aligned, non-null, bounds, lifetime, exclusive, alias.
-
-Or must be multi-line with at least 2 bullet points.
+This behavior must be explicitly enabled and is discouraged in
+high-assurance contexts.
 
 
-## Macro and generated code handling (important)
-Unsafe inside macros
+### 5. Content Quality Requirements
 
-Unsafe inside macro expansions is hard to associate with comments in source.
+A SAFETY: comment is considered invalid if:
 
-##Policy:
+  it is empty
 
-  If unsafe originates from macro expansion:
+  it is purely tautological (e.g., “this is safe”)
 
-    report with a distinct code: origin=macro
-
-    require SAFETY if the macro invocation is preceded by SAFETY and the span is attributable
-
-    otherwise, allow a config option:
-
-      require_safety_for_macro_unsafe = true/false
-
-      default: true in high_assurance, false in embedded baseline
-
-## Generated files
-
-If file path matches patterns like OUT_DIR, target/, build.rs outputs:
-
-default: exclude unless explicitly included
+  it restates the code without describing invariants
 
 
+## Heuristic Content Checks
 
-Configuration knobs 
-Config entries:
+At minimum, the justification should:
 
-  safety_comment_token = "SAFETY:" (fixed by default)
+  describe why the operation is safe
 
-  allow_blank_line_between_safety_and_unsafe = false
+  identify assumptions or guarantees
 
-  max_attribute_lines_between_safety_and_unsafe = 8
+Heuristics may include:
 
-  require_safety_for_nested_unsafe = true (high_assurance default)
+  presence of terms such as:
+  invariant, guarantee, caller, valid, aligned, lifetime,
+  non-null, bounds, exclusive, alias
+  multi-line explanations or bullet points
 
-  require_safety_for_macro_unsafe = true (high_assurance default)
+Content quality failures should default to Warning, not Error.
 
-  content_quality_check = warn|off|error (default: warn)
+### 6. Macros and Generated Code
+## 6.1 Unsafe in Macro Expansions
+
+Unsafe constructs originating from macro expansion present limited
+source-level context.
+
+Policy:
+
+  If the unsafe span is attributable to a macro invocation:
+
+  attempt association with a preceding SAFETY: comment
+
+  otherwise emit a diagnostic noting macro origin
+
+Enforcement level is profile-dependent
+
+Default:
+
+  high_assurance: require justification when attributable
+
+  embedded: warn only
 
 
-## Diagnostics: making findings actionable
+## 6.2 Generated Files
 
-When it flags an unsafe block, the message should say exactly what would satisfy it, e.g.:
+Files generated during build (e.g., OUT_DIR, target/) are excluded
+by default unless explicitly included via configuration.
 
-  HA-RUST-0001: unsafe block lacks a SAFETY: justification comment immediately adjacent to the unsafe construct (same line or directly preceding comment block).
 
-  // SAFETY: <state invariants and guarantees here>
-unsafe { ... }
+### 7. Configuration Parameters
+
+The following configuration parameters control this policy:
+
+  safety_comment_token (default: "SAFETY:")
+
+  allow_blank_line_between_comment_and_unsafe (default: false)
+
+  max_attribute_lines_between_comment_and_unsafe (default: 8)
+
+  require_safety_for_nested_unsafe (default: true)
+
+  require_safety_for_macro_unsafe (profile-dependent)
+
+  content_quality_enforcement (off | warn | error, default: warn)
+
+
+### 8. Diagnostics and Developer Guidance
+
+Diagnostics related to missing or invalid safety justifications must:
+
+  reference the applicable rule ID
+
+  explain the association requirement
+
+  include an example of an acceptable SAFETY: comment
+
+The goal is corrective guidance, not punitive enforcement.
+
+
+### 9. Evolution of This Policy
+
+This policy may evolve as:
+
+  additional unsafe patterns are identified
+
+  Rust language features change
+
+  project assurance needs grow
+
+Changes must preserve backward traceability and be documented.
 
