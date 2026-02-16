@@ -97,3 +97,11 @@ Acknowledgements
 Inspired by limitations in existing tooling like rustc and Clippy
 Leveraging the RustSec Advisory Database
 Aligned to emerging Rust safety-critical practices
+
+
+## 📜 Rule Catalog
+
+The full list of planned and implemented static analysis rules is maintained
+separately.
+
+➡️ **[View the Rule Catalog](docs/rule-catalog.md)**
