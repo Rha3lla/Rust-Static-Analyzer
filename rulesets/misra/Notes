@@ -7,3 +7,44 @@ misra_category: required | advisory | n_a
 mapping_strength: direct | partial | derived | heuristic
 
 The tool should fail fast if the file contains unknown values (tool error exit code 2).
+
+
+
+basic outline for misra_applicability.toml
+# Per-rule mappings
+
+[[rule]]
+id = "HA-RUST-001"
+title = "Unjustified unsafe block"
+default_severity = "error"
+
+# applicability mode for MISRA reporting
+# from the doc: rust_general | safe_rust | both | not_applicable
+misra_applicability = "rust_general"
+
+#reporting categories
+# from the doc: required | advisory | n_a
+misra_category = "required"
+
+# references -- keeping as strings for flexibility
+# example: "MISRA-C:2025-Add6 <table-row-id>"
+misra_refs = [
+"MISRA-C:2025 Add6 <TBD>"
+]
+
+# mapping strength -- optional for now, might be implemented later
+# options: direct | partial | derived | heuristic
+# mapping_strength = "direct"
+
+# CWE references for traceability
+cwe = ["CWE-119"]
+
+# placeholder for repo references/evidence (docs, implementation, tests)
+#doc_path = "docs/rules/HA-RUST-0001.md"
+#impl_path = "crates/ha_lint_core/src/rules/unsafe.rs"
+#test_path = ["tests/fixtures/unsafe/ha_rust_0001.rs"
+
+# notes for humans
+notes = """
+example: Requires an associated SAFETY justification per policy. Enforced conservatively.
+"""
