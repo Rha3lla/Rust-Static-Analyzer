@@ -1,0 +1,9 @@
+treat these as strict enums:
+
+misra_applicability: rust_general | safe_rust | both | not_applicable
+
+misra_category: required | advisory | n_a
+
+mapping_strength: direct | partial | derived | heuristic
+
+The tool should fail fast if the file contains unknown values (tool error exit code 2).
