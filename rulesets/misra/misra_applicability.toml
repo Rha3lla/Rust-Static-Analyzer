@@ -1,5 +1,5 @@
 [mapping]
-#version of THIS mapping schema (not the tool version)
+#version of THIS mapping schema 
 schema_version = "0.1"
 
 # MISRA source reference (human readable, not legal copy)
@@ -12,42 +12,23 @@ last_updated = "2026-02-19"
 notes = """
 This file defines explicit mappings between HA-RUST rules and MISRA guidelines that are
 applicable to Rust. The tool uses these mappings for compliance reporting and filtering. 
+
+IMPORTANT:
+- This file does not reproduce MISRA content.
+- MISRA references are recorded as identifiers/labels only.
+- Exact MISRA refs are marked <TBD> until validated against the licensed source.
 """
 
-# Per-rule mappings
-
+# Unsafe/High Assurance Core
 [[rule]]
-id = "HA-RUST-001"
+id = "HA-RUST-0001"
 title = "Unjustified unsafe block"
 default_severity = "error"
-
-# applicability mode for MISRA reporting
-# from the doc: rust_general | safe_rust | both | not_applicable
 misra_applicability = "rust_general"
+misra_category = "n_a"      #this is temporary until I verify each as required or advisary
+misra_refs = ["MISRA-C:2025 Add6<TBD>"]     #will add specific sections once I identify and trace them
+mapping_strength = "direct"     #this will be confirmed via peer review at a later date
+cwe = ["CWE-119"]     #this will also be independently verified as I itertate through rules
+doc_path = "docs/rules/HA-RUST-0001.md"     #this will be the path for every documented rule in this repo
+notes = "Unsafe use must be justified and traceable via SAFETY rationale"
 
-#reporting categories
-# from the doc: required | advisory | n_a
-misra_category = "required"
-
-# references -- keeping as strings for flexibility
-# example: "MISRA-C:2025-Add6 <table-row-id>"
-misra_refs = [
-"MISRA-C:2025 Add6 <TBD>"
-]
-
-# mapping strength -- optional for now, might be implemented later
-# options: direct | partial | derived | heuristic
-# mapping_strength = "direct"
-
-# CWE references for traceability
-cwe = ["CWE-119"]
-
-# placeholder for repo references/evidence (docs, implementation, tests)
-#doc_path = "docs/rules/HA-RUST-0001.md"
-#impl_path = "crates/ha_lint_core/src/rules/unsafe.rs"
-#test_path = ["tests/fixtures/unsafe/ha_rust_0001.rs"
-
-# notes for humans
-notes = """
-example: Requires an associated SAFETY justification per policy. Enforced conservatively.
-"""
