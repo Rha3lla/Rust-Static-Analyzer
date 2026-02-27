@@ -46,3 +46,17 @@ Command-line interface.
 
 ## Data Flow
 
+## Key Decisions
+
+### Decision: Rust for Implementation
+**Rationale:** Dogfooding, performance, same platform as target users, memory safety without runtime.
+
+### Decision: Pinned Stable Toolchain
+**Rationale:** Certification requires reproducibility. Nightly APIs change too frequently.
+
+### Decision: SARIF 2.1.0 as Primary Output
+**Rationale:** Industry standard, supported by GitHub, Azure DevOps, and DoD toolchains.
+
+### Decision: Minimal External Dependencies
+**Rationale:** Reduce supply chain attack surface, simplify auditing, enable air-gapped builds.
+
