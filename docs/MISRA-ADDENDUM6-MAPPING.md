@@ -1,54 +1,69 @@
-# MISRA-C:2025 Addendum 6 — Applicability to Rust
+# MISRA-C:2025 Addendum 6 — Rust Applicability Mapping
 
-Tracking document for rule implementation status.
+This document tracks the applicability and implementation status of MISRA-C:2025 guidelines as they apply to Rust, per Addendum 6.
+
+## Document Info
+
+| Field | Value |
+|-------|-------|
+| MISRA-C Version | 2025 |
+| Addendum | 6 (Applicability to Rust) |
+| Last Updated | 2025-01-XX |
+| Tool | HAAT (High-Assurance Analysis Tool) |
+
+---
 
 ## Legend
 
+### Rust Applicability Status
+
 | Status | Meaning |
 |--------|---------|
-| ✅ Enforced | Rust language/compiler guarantees compliance |
-| 🔧 Tool | Requires static analysis tooling |
+| ✅ Language | Rust compiler/language enforces this by design |
+| 🔧 Tool | Requires static analysis tooling (HAAT implements) |
 | 📖 Review | Requires manual code review |
+| ⚠️ Partial | Partially enforced; some aspects need tooling |
 | ➖ N/A | Not applicable to Rust |
-| 🚧 Planned | Implementation planned |
-| ✔️ Done | Implemented in HAAT |
 
-## Severity Mapping Rationale
+### Obligation (per MISRA)
+
+| Level | Meaning |
+|-------|---------|
+| Mandatory | Must be followed without exception |
+| Required | Must be followed except with documented deviation |
+| Advisory | Recommended best practice |
+
+### HAAT Severity Assignment
 
 | Severity | Criteria |
 |----------|----------|
-| Critical | Undefined behavior, memory safety violation, guaranteed exploit vector |
+| Critical | Undefined behavior, memory safety violation, exploitable vulnerability |
 | High | Likely security/safety impact, data integrity risk |
-| Medium | Potential issue under specific conditions, defense-in-depth |
-| Low | Code quality, maintainability, best practice |
+| Medium | Potential issue under specific conditions |
+| Low | Code quality, maintainability, defense-in-depth |
+
+### Implementation Status
+
+| Status | Meaning |
+|--------|---------|
+| ⬜ Backlog | Not yet planned |
+| 🚧 Planned | In roadmap |
+| 🔨 In Progress | Currently implementing |
+| ✔️ Done | Implemented and tested |
+| ➖ Skip | Will not implement (language-enforced or N/A) |
 
 ---
 
 ## Directives
 
-| ID | Title | Obligation | Rust Status | Severity | HAAT Status |
-|----|-------|------------|-------------|----------|-------------|
-| Dir 1.1 | Implementation-defined behavior | Required | 🔧 Tool | Medium | 🚧 Planned |
-| Dir 2.1 | Assembly language | Required | 🔧 Tool | High | 🚧 Planned |
-| Dir 3.1 | Code comprehension | Required | 📖 Review | Low | ➖ N/A |
-| Dir 4.1 | Run-time failures | Required | 🔧 Tool | Critical | 🚧 Planned |
-| ... | ... | ... | ... | ... | ... |
+| ID | Title | C Status | Rust General | Safe Rust | Severity | HAAT Status | Notes |
+|----|-------|----------|--------------|-----------|----------|-------------|-------|
+| | | | | | | | |
 
 ---
 
 ## Rules
 
-| ID | Title | Obligation | Rust Status | Severity | HAAT Status |
-|----|-------|------------|-------------|----------|-------------|
-| Rule 1.1 | Non-conforming code | Required | 🔧 Tool | High | 🚧 Planned |
-| Rule 1.2 | Undefined behavior | Required | ✅ Enforced | Critical | ✅ Enforced |
-| Rule 1.3 | Unspecified behavior | Required | 🔧 Tool | High | 🚧 Planned |
-| ... | ... | ... | ... | ... | ... |
-
----
-
-## Notes
-
-- Rules marked "✅ Enforced" are compliance claims based on Rust's language guarantees
-- These claims should be documented in certification evidence packages
-- Tool-enforced rules are the implementation priority for HAAT
+| ID | Title | C Status | Rust General | Safe Rust | Severity | HAAT Status | Notes |
+|----|-------|----------|--------------|-----------|----------|-------------|-------|
+| | | | | | | | |
