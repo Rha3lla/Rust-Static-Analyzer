@@ -1,0 +1,131 @@
+name: Rule
+description: A new analysis rule to implement
+labels: ["rule"]
+body:
+  - type: input
+    id: rule-id
+    attributes:
+      label: Rule ID
+      placeholder: HA-RUST-0001
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Rule Title
+      placeholder: Unsafe block without safety comment
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Default Severity
+      options:
+        - Error
+        - Warning
+        - Note
+    validations:
+      required: true
+
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: Milestone
+      options:
+        - M1 — Tool Adapters + Memory Rules (v0.2.0)
+        - M2 — Semgrep + CWE/NIST Rules (v0.3.0)
+        - M3 — Crypto + STIG + MISRA (v0.4.0)
+        - M5 — Native Rule Engine + Full Fixture Suite (v0.6.0)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: misra-category
+    attributes:
+      label: MISRA Category
+      options:
+        - Required
+        - Advisory
+        - N/A
+    validations:
+      required: true
+
+  - type: input
+    id: misra-ref
+    attributes:
+      label: MISRA Reference
+      placeholder: "e.g. Dir 4.1, Rule 14.3"
+
+  - type: input
+    id: cwe
+    attributes:
+      label: CWE(s)
+      placeholder: "e.g. CWE-676, CWE-119"
+
+  - type: dropdown
+    id: profiles
+    attributes:
+      label: Profiles
+      multiple: true
+      options:
+        - High Assurance
+        - Security
+        - MISRA Rust
+        - Embedded
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why does this rule exist? What failure mode does it prevent?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What does the rule check? What does it explicitly NOT check?
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Show a FAIL case and a PASS case in Rust code.
+      value: |
+        **FAIL**
+        ```rust
+        // triggering code here
+        ```
+
+        **PASS**
+        ```rust
+        // compliant code here
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: deviation
+    attributes:
+      label: Deviation Guidance
+      description: Under what conditions can this rule be suppressed? What justification is required?
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      value: |
+        - [ ] Rule implementation in `crates/rust-sa-rules/src/`
+        - [ ] Positive fixture (FAIL case) triggers finding
+        - [ ] Negative fixture (PASS case) produces no finding
+        - [ ] Rule documented in `docs/rules/RULE-ID.md`
+        - [ ] Rule registered in Notion Rules database with status = Implemented
+    validations:
+      required: true
