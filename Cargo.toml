@@ -3,7 +3,7 @@ name = "rust-sa"
 version = "0.1.0"
 edition = "2026"
 authors = ["Melissa Wilson <medicmommy83@gmail.com>"]
-description = "High-assurance static analyzer for Rust -- DoD/NIST/STIG/
+description = "High-assurance static analyzer for Rust -- DoD/NIST/STIG/MISRA"
 license = "SEE LICENSE IN COPYRIGHT"
 
 [dependencies]
@@ -12,7 +12,7 @@ serde = {version = "1", features = ["derive"]}
 serde_json = "1"
 
 #Rust AST parsing -- core of the custom rule engine
-syn = {version = "2", features = ["full", "visit", "extra-trait"]}
+syn = {version = "2", features = ["full", "visit", "extra-traits"]}
 
 #Error handling
 anyhow = "1"
