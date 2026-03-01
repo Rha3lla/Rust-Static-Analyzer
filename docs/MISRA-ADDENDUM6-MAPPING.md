@@ -8,7 +8,7 @@ This document tracks the applicability and implementation status of MISRA-C:2025
 |-------|-------|
 | MISRA-C Version | 2025 |
 | Addendum | 6 (Applicability to Rust) |
-| Last Updated | 2026-02-28 |
+| Last Updated | 2026-03-01 |
 | Tool | HAAT (High-Assurance Analysis Tool) |
 
 ---
