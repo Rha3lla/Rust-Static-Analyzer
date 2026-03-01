@@ -1,0 +1,73 @@
+name: Task
+description: A unit of work tracked in the project board
+labels: []
+body:
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: Milestone
+      options:
+        - M0 — Repo Scaffold & Infra (v0.1.0)
+        - M1 — Tool Adapters + Memory Rules (v0.2.0)
+        - M2 — Semgrep + CWE/NIST Rules (v0.3.0)
+        - M3 — Crypto + STIG + MISRA (v0.4.0)
+        - M4 — Audit Trail + Supply Chain + CI Action (v0.5.0)
+        - M5 — Native Rule Engine + Full Fixture Suite (v0.6.0)
+        - M6 — Hardening + Docs + Release Candidate (v1.0.0-rc)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Engine
+        - Rule
+        - CI
+        - CLI
+        - Reporting
+        - Docs
+        - Research
+        - Test
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What to do
+      description: Clear description of the work. Include file paths, struct names, function signatures where known.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Specific, testable conditions that must be true for this task to be Done.
+      placeholder: |
+        - [ ] cargo build passes
+        - [ ] cargo test -p rust-sa-core passes
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Risk
+      description: Dependencies, blockers, things to watch out for.
+    validations:
+      required: false
