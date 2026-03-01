@@ -1,7 +1,0 @@
-lossy integer conversion
-
-MISRA sources: section 5.10 (advisory per ADD6) also 5.10.3
-  R.10.3 possibly
-  R.10.4 possibly
-  R.10.5 loosely, advisory
-  R.11.4 required
