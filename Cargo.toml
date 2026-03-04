@@ -1,32 +1,7 @@
-[package]
-name = "rust-sa"
-version = "0.1.0"
-edition = "2026"
-authors = ["Melissa Wilson <medicmommy83@gmail.com>"]
-description = "High-assurance static analyzer for Rust -- DoD/NIST/STIG/MISRA"
-license = "SEE LICENSE IN COPYRIGHT"
-
-[dependencies]
-#Serialization -- needed for SARIF + JSON output
-serde = {version = "1", features = ["derive"]}
-serde_json = "1"
-
-#Rust AST parsing -- core of the custom rule engine
-syn = {version = "2", features = ["full", "visit", "extra-traits"]}
-
-#Error handling
-anyhow = "1"
-thiserror = "1"
-
-#CLI interface
-clap = {version = "4", features = ["derive"]}
-
-#config file parsing
-toml = "0.8"
-
-#Filesystem walking
-walkdir = "2"
-
-[dev-dependencies]
-#test helpers
-pretty_assertions = "1"
+[workspace]
+members = [
+    "crates/rust-sa-core",
+    "crates/rust-sa-cli",
+    "crates/rust-sa-rules",
+]
+resolver = "2"
