@@ -1,0 +1,2 @@
+//placeholder for the rust-sa-cli crate, which will contain the command-line interface for the static analysis tool. T
+//This crate will be used to provide a user-friendly way to run the static analysis on Rust code.

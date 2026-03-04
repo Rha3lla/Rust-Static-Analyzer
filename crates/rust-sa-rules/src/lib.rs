@@ -1,0 +1,2 @@
+//placeholder for the rust-sa-rules crate, which will contain the rules for the static analysis tool. 
+//This crate will be used by the CLI and other tools to define the rules that will be applied to the Rust code being analyzed.
