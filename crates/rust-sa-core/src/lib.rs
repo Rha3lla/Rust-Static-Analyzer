@@ -1,2 +1,2 @@
-//placeholder for the rust-sa-core crate, which will contain the core logic for the static analysis tool. 
 //This crate will be used by the CLI and other tools to perform the actual analysis of Rust code.
+pub mod findings;
