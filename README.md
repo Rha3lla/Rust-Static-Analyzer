@@ -1,4 +1,5 @@
-# Rust Static Analyzer
+# Optimizer
+## Rust Static Analyzer
 
 **A rules-driven static analysis tool for Rust — designed for high-assurance systems, embedded development, and CI/CD integration.**  
 This project aims to fill the gap between compiler-level checks and the rigorous demands of safety, security, and embedded coding standards.
